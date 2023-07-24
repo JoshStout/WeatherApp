@@ -1,4 +1,4 @@
-package com.example.weatherapp
+package com.example.weatherapp.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -18,40 +18,42 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.weatherapp.data.DayForecast
+import com.example.weatherapp.R
+import com.example.weatherapp.Screen
+import com.example.weatherapp.viewModels.TodayViewModel
 
 @Composable
-fun CurrentConditionScreen(navController: NavController, forecastObj: DayForecast){
+fun CurrentConditionScreen(navController: NavController){
 
     Column{
         TopBar()
-        DisplayTemp(forecastObj)
+        DisplayTemp()
         ForecastButton(navController = navController)
     }
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(){
-    TopAppBar(
-        title = {Text(text = "My Weather App")},
-        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Gray)
-    )
-}
+fun DisplayTemp(
+    viewModel: TodayViewModel = hiltViewModel()
+){
+    val today = viewModel.todayData.observeAsState()
+    LaunchedEffect(Unit){
+        viewModel.viewAppeared()
+    }
 
-@Composable
-fun DisplayTemp(current: DayForecast){
     Column(){
         Column(
             modifier = Modifier
@@ -60,7 +62,7 @@ fun DisplayTemp(current: DayForecast){
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.size(10.dp))
-            Text(text = stringResource(id = R.string.city), fontSize = 15.sp)
+            Text(text = "${today.value?.cityName}", fontSize = 15.sp)
         }
         Row(
             modifier = Modifier
@@ -71,19 +73,24 @@ fun DisplayTemp(current: DayForecast){
                 Column(
                     modifier = Modifier.padding(10.dp)
                 ){
-                    Text(text = "${current.temp.day.toInt()}°",
+                    Text(text = "${today.value?.conditions?.temp?.toInt()}°",
                         fontSize = 55.sp
                     )
-                    Text(text = stringResource(id = R.string.feels_like),
+                    Text(text = "${today.value?.conditions?.feelsLike?.toInt()}°",
                         fontSize = 12.sp
                     )
                 }
                 Spacer(modifier = Modifier.size(20.dp))
-                Text(text = "Low ${current.temp.min.toInt()}°", fontSize = 15.sp)
-                Text(text = "High ${current.temp.max.toInt()}°", fontSize = 15.sp)
-                Text(text = "Humidity ${current.humidity}%", fontSize = 15.sp)
-                Text(text = "Pressure ${current.pressure} hPa", fontSize = 15.sp)
+                Text(text = "Low ${today.value?.conditions?.tempMin?.toInt()}°",
+                    fontSize = 15.sp)
+                Text(text = "High ${today.value?.conditions?.tempMax?.toInt()}°",
+                    fontSize = 15.sp)
+                Text(text = "Humidity ${today.value?.conditions?.humidity}%",
+                    fontSize = 15.sp)
+                Text(text = "Pressure ${today.value?.conditions?.pressure} hPa",
+                    fontSize = 15.sp)
             }
+
             Image(
                 painter = painterResource(id = R.drawable.sun),
                 contentDescription = "Sun Image",
@@ -92,7 +99,17 @@ fun DisplayTemp(current: DayForecast){
                     .clip(CircleShape),
             )
         }
+
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopBar(){
+    TopAppBar(
+        title = {Text(text = "My Weather App")},
+        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Gray)
+    )
 }
 
 @Composable

@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.weatherapp.views.CurrentConditionScreen
+import com.example.weatherapp.views.ForecastScreen
 
 @Composable
 fun SetupNavGraph(
@@ -16,18 +18,11 @@ fun SetupNavGraph(
         composable(
             route = Screen.Today.route
         ){
-            var obj = getFirstForecastObj()
-            CurrentConditionScreen(navController, obj)
+            CurrentConditionScreen(navController)
         }
         composable(
             route = Screen.Forecast.route,
-//            arguments = listOf(
-//                navArgument("id"){
-//                    type = NavType.IntType
-//                }
-//            )
         ){
-            //val id = it.arguments?.getInt("id")
             ForecastScreen(navController)
         }
     }
