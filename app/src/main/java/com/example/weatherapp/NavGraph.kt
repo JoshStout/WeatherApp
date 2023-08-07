@@ -21,7 +21,7 @@ fun SetupNavGraph(
             CurrentConditionScreen(navController)
         }
         composable(
-            route = Screen.Forecast.route,
+            route = Screen.Forecast.route
         ){
             ForecastScreen(navController)
         }

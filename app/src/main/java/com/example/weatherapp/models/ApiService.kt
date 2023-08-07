@@ -9,14 +9,14 @@ interface ApiService {
 
     @GET("data/2.5/weather")
     suspend fun getCurrentData (
-        @Query("zip") zip: String = "55106",
+        @Query("zip") zip: String,
         @Query("appid") appID: String = "2712b017519c4b8ee510f6bb4396943c",
         @Query("units") units: String = "imperial",
     ) : TodayData
 
     @GET("data/2.5/forecast/daily")
     suspend fun getDailyForecastData (
-        @Query("zip") zip: String = "55106,us",
+        @Query("zip") zip: String,
         @Query("appid") appID: String = "2712b017519c4b8ee510f6bb4396943c",
         @Query("units") units: String = "imperial",
         @Query("cnt") count: Int = 16,

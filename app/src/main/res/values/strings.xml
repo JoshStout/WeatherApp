@@ -1,10 +1,22 @@
 <resources>
     <string name="app_name">Weather App</string>
-    <string name="city">St. Paul, MN</string>
-    <string name="temp">72°</string>
-    <string name="feels_like">Feels like 78°</string>
-    <string name="low_temp">Low 65°</string>
-    <string name="high_temp">High 80°</string>
-    <string name="humidity">Humidity 100%</string>
-    <string name="pressure">Pressure 1023 hPa</string>
+    <string name="feels_like">Feels like</string>
+    <string name="space">\u0020</string>
+    <string name="low_temp">Low</string>
+    <string name="high_temp">High</string>
+    <string name="humidity">Humidity</string>
+    <string name="percent">%</string>
+    <string name="pressure">Pressure</string>
+    <string name="hPa"> hPa</string>
+    <string name="degree_symbol">°</string>
+    <string name="forecast">Forecast</string>
+    <string name="enter_zip">Enter Zip Code</string>
+    <string name="update_zip">Update Zip Code</string>
+    <string name="enter_valid_zip">Enter Valid Zip Code</string>
+    <string name="ok">Ok</string>
+    <string name="temp">Temp:</string>
+    <string name="high">High:</string>
+    <string name="low">Low:</string>
+    <string name="sunrise">Sunrise:</string>
+    <string name="sunset">Sunset:</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.example.weatherapp.views
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,10 +8,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -22,13 +21,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.weatherapp.R
 import com.example.weatherapp.Screen
 import com.example.weatherapp.data.DailyForecastItem
@@ -55,14 +54,14 @@ fun ForecastScreen(
 @Composable
 fun TopForecastBar(){
     TopAppBar(
-        title = {Text(text = "Forecast")},
+        title = {Text(text = stringResource(id = R.string.forecast))},
         colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Gray)
     )
 }
 
 @Composable
 fun DailyForecastRows(
-    viewModel: DailyForecastViewModel = hiltViewModel()
+    viewModel: DailyForecastViewModel = hiltViewModel(),
 ){
     val forecastData = viewModel.dailyForecastConditionsData.observeAsState()
     LaunchedEffect(Unit) {
@@ -86,12 +85,10 @@ fun ForecastRows(forecastDay: DailyForecastItem){
                 .height(55.dp)
                 .fillMaxWidth()
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.sun),
-                contentDescription = "Sun Image",
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .padding(bottom = 15.dp)
+            AsyncImage(
+                model = "https://openweathermap.org/img/wn/${forecastDay.weatherData[0]?.iconName}@2x.png",
+                contentDescription = "${forecastDay.weatherData[0]?.description}@2x.png",
+                modifier = Modifier.size(55.dp)
             )
             Text(
                 text = "${getMonthDay(forecastDay.date.toString())}",
@@ -102,22 +99,35 @@ fun ForecastRows(forecastDay: DailyForecastItem){
             Spacer(modifier = Modifier.width(25.dp))
             Row(){
                 Column(){
-                    Text(text = "Temp: ${forecastDay.temp.day.toInt()}°")
-                    Text(text = "High: ${forecastDay.temp.max.toInt()}°")
+                    Text(text = stringResource(id = R.string.temp) +
+                            stringResource(id = R.string.space) +
+                            forecastDay.temp.day.toInt() +
+                            stringResource(id = R.string.degree_symbol))
+                    Text(text = stringResource(id = R.string.high) +
+                            stringResource(id = R.string.space) +
+                            forecastDay.temp.max.toInt() +
+                            stringResource(id = R.string.degree_symbol))
                 }
                 Column() {
-                    Text(text = "")
-                    Text(text = "Low: ${forecastDay.temp.min.toInt()}°")
+                    Text(text = stringResource(id = R.string.space))
+                    Text(text = stringResource(id = R.string.low) +
+                            stringResource(id = R.string.space) +
+                            forecastDay.temp.min.toInt() +
+                            stringResource(id = R.string.degree_symbol))
                 }
                 Spacer(modifier = Modifier.width(25.dp))
                 Column(){
                     Text(
                         modifier = Modifier.align(Alignment.End),
-                        text = "Sunrise: ${getTime(forecastDay.sunrise.toString())}"
+                        text = stringResource(id = R.string.sunrise) +
+                                stringResource(id = R.string.space) +
+                                getTime(forecastDay.sunrise.toString())
                     )
                     Text(
                         modifier = Modifier.align(Alignment.End),
-                        text = "Sunset: ${getTime(forecastDay.sunset.toString())}"
+                        text = stringResource(id = R.string.sunset) +
+                                stringResource(id = R.string.space) +
+                                getTime(forecastDay.sunset.toString())
                     )
                 }
             }
@@ -125,7 +135,7 @@ fun ForecastRows(forecastDay: DailyForecastItem){
     }
 }
 
-// convert UTC timestamp to datetime in Kotlin
+// convert UTC timestamp to datetime
 private fun getMonthDay(s: String): String? {
     try {
         val sdf = SimpleDateFormat("MMM d")
@@ -136,7 +146,7 @@ private fun getMonthDay(s: String): String? {
     }
 }
 
-// convert UTC timestamp to datetime in Kotlin
+// convert UTC timestamp to datetime
 private fun getTime(s: String): String? {
     try {
         val sdf = SimpleDateFormat("h:mm a")

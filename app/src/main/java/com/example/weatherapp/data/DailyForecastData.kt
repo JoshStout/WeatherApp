@@ -6,6 +6,11 @@ data class DailyForecastData(
     @Json(name = "list") val listOfForecasts: List<DailyForecastItem>
 )
 
+data class ForecastIconData(
+    @Json(name = "icon") val iconName: String,
+    @Json(name = "description") val description: String,
+)
+
 data class DailyForecastItem(
     @Json(name = "weather") val weatherData: List<IconData>,
     @Json(name = "dt") val date: Long,
