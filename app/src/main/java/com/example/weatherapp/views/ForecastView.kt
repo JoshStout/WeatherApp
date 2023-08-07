@@ -38,7 +38,8 @@ import java.util.Date
 
 @Composable
 fun ForecastScreen(
-    navController: NavController
+    navController: NavController,
+    zip: String
 ){
     Column(
         modifier = Modifier.clickable{
@@ -46,7 +47,7 @@ fun ForecastScreen(
         }
     ) {
         TopForecastBar()
-        DailyForecastRows()
+        DailyForecastRows(zip)
     }
 }
 
@@ -59,13 +60,17 @@ fun TopForecastBar(){
     )
 }
 
+
 @Composable
 fun DailyForecastRows(
+    zip: String,
     viewModel: DailyForecastViewModel = hiltViewModel(),
 ){
     val forecastData = viewModel.dailyForecastConditionsData.observeAsState()
     LaunchedEffect(Unit) {
-        viewModel.viewAppeared()
+        viewModel.viewAppeared(
+            zip,
+        )
     }
 
     LazyColumn(){

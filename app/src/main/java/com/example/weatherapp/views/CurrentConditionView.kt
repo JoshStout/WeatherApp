@@ -32,6 +32,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.weatherapp.R
 import com.example.weatherapp.Screen
+import com.example.weatherapp.viewModels.DailyForecastViewModel
 import com.example.weatherapp.viewModels.TodayViewModel
 
 @Composable
@@ -129,7 +130,8 @@ fun TopBar(){
 
 @Composable
 fun ForecastButton(
-    navController: NavController
+    navController: NavController,
+    forecastViewModel: DailyForecastViewModel = hiltViewModel()
 ){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -140,7 +142,7 @@ fun ForecastButton(
         Button(
             shape = RectangleShape,
             onClick = {
-                navController.navigate(route = Screen.Forecast.route)
+                navController.navigate(route = Screen.Forecast.passID(forecastViewModel.zipCode.value.toString()))
             },
             colors = ButtonDefaults.buttonColors(Color.Gray),
             modifier = Modifier.width(180.dp)
@@ -153,7 +155,8 @@ fun ForecastButton(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ZipCodeField(
-    viewModel: TodayViewModel
+    viewModel: TodayViewModel,
+    forecastViewModel: DailyForecastViewModel = hiltViewModel()
 ){
     val input = viewModel.zipCode.observeAsState()
     val showAlert = viewModel.invalidZip.observeAsState(initial = false)
@@ -170,6 +173,7 @@ fun ZipCodeField(
             value = input.value.toString(),
             onValueChange = {
                 viewModel.zipCode.value = it
+                forecastViewModel.zipCode.value = it
             },
             label = { Text(text = stringResource(id = R.string.enter_zip)) },
         )
